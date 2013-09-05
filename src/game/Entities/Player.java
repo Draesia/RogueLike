@@ -26,6 +26,7 @@ public class Player extends Entity {
 		// TODO Auto-generated method stub
 		
 	}
+	//niggaer
 
 	@Override
 	void moveRight() {

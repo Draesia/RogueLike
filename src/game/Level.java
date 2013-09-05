@@ -16,7 +16,7 @@ public class Level {
 
 	public Level(int level)
 	{
-
+		
 	}
 
 	public Tile[][] getTilesArray() {
