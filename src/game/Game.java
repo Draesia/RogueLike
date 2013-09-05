@@ -1,5 +1,6 @@
 package game;
 
+import game.Entities.Entity;
 import game.Entities.Player;
 
 import java.awt.Color;
@@ -13,24 +14,21 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+
 import javax.swing.JPanel;
-
-import Game.Frame;
-import Game.Tile;
-
-
 
 public class Game extends JPanel implements ActionListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	public static boolean[] mouseDown = new boolean[4];
 	public static Image[] images = new Image[30];
 	public static int cx, cy, sx, sy;
 	public static Level l;
 	public static Player p;
+	public boolean update = true;
+	public static ArrayList<Entity> entities = new ArrayList<Entity>();
+	private static boolean[] controls = new boolean[4];
 	
 	public Game()
 	{
@@ -49,7 +47,19 @@ public class Game extends JPanel implements ActionListener{
 		{
 			@Override
 			public void keyPressed(KeyEvent e) {
-				
+				int id = e.getKeyCode();
+				if(id == Settings.A) 	 controls[0] = true;
+				if(id == Settings.W) 	 controls[1] = true;
+				if(id == Settings.S) 	 controls[2] = true;
+				if(id == Settings.D) 	 controls[3] = true;
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				int id = e.getKeyCode();
+				if(id == Settings.A) 	 controls[0] = false;
+				if(id == Settings.W) 	 controls[1] = false;
+				if(id == Settings.S) 	 controls[2] = false;
+				if(id == Settings.D) 	 controls[3] = false;
 			}
 		});
 
@@ -64,6 +74,20 @@ public class Game extends JPanel implements ActionListener{
 
 		});
 	}
+	
+	public void update()
+	{
+		if(controls[0]) p.moveLeft();
+		if(controls[1]) p.moveUp();
+		if(controls[2]) p.moveDown();
+		if(controls[3]) p.moveRight();
+		
+		for(Entity e : entities)
+		{
+			//e.update();
+		}
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		repaint();
@@ -74,26 +98,25 @@ public class Game extends JPanel implements ActionListener{
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.BLACK);
 		g2d.fillRect(0, 0, Frame.maxX, Frame.maxY);
-		Tile[][] tilelist = l.getTilesArray();
 		for(int x = 0; x < l.sizeX; x++)
 		{
 			for(int y = 0; y < l.sizeY; y++)
 			{
-				
+				Tile t = l.getTilesArray()[x][y];
+				if(t == null) continue;
+				g2d.drawImage(images[t.id], x*Tile.SIZE, y*Tile.SIZE, null);
 			}
 		}
-		for(Tile[] t: tilelist)
-			for(Tile k : t) 
-				if(k.x-cx > Tile.SIZE*-1 && k.x-cx < Frame.maxX()+Tile.SIZE && k.y-cy > Tile.SIZE*-1 && k.y-cy < Frame.maxY()+Tile.SIZE)
-				{
-					if(k.getType() != null)
-						g2d.drawImage(k.getType(), k.x-cx, k.y-cy, null);
-					if(k.getResource() != null)
-						g2d.drawImage(k.getResource(), k.x-cx+Tile.SIZE/2, k.y-cy+Tile.SIZE/2, null);
-					if(k.getUnit() != null)
-						g2d.drawImage(k.unit.getImage(), k.x-cx+Tile.SIZE/4, k.y-cy+Tile.SIZE/4, null);
-				}
-
+		for(Entity e : entities)
+		{
+			g2d.drawImage(images[2], e.x, e.y, null);
+		}
+		g2d.drawImage(p.getImage(), p.x, p.y, null);
+		if(update) {
+			update();
+		} 
+		update = !update;
+					
 		repaint();
 	}
 }

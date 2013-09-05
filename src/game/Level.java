@@ -5,6 +5,7 @@ import game.Entities.Player;
 import java.util.List;
 
 
+
 public class Level {
 
 
@@ -16,6 +17,21 @@ public class Level {
 
 	public Level(int level)
 	{
+		for(int x = 0; x < sizeX; x++)
+		{
+			for(int y = 0; y < sizeY; y++)
+			{
+				tileList[x][y] = new Tile(0);
+				if(y==0 || x==5 || x == 15)
+				{
+					tileList[x][y].setCollide(true);
+					tileList[x][y].id = 3;
+				}
+				if(y == 5 || y == 7) { tileList[x][y].setCollide(true); tileList[x][y].id = 3;}
+				if(y == 6) { tileList[x][y].setCollide(false); tileList[x][y].id = 0;}
+				if(x == 7) {tileList[x][y].setCollide(false); tileList[x][y].id = 0;}
+			}
+		}
 		
 	}
 
