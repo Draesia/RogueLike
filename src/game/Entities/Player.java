@@ -15,6 +15,7 @@ public class Player extends Entity {
 		this.x = x;
 		this.y = y;
 	}
+<<<<<<< HEAD
 
 
 	public void moveDown(){
@@ -84,4 +85,9 @@ public class Player extends Entity {
 		return Game.images[1];
 	}
 
+=======
+	
+	
+	
+>>>>>>> origin/George_temp
 }

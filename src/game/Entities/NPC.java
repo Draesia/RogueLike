@@ -1,29 +1,34 @@
 package game.Entities;
 
+import AI.movingFMS.IdleState;
+import AI.movingFMS.MovingBaseState;
+
 public class NPC extends Entity {
-
-	@Override
-	void moveDown() {
-		// TODO Auto-generated method stub
-		
+	public boolean WillAttack;
+	public boolean canSeePlayer =false;
+	public boolean isInRangeToAttackPlayer = false;
+	public MovingBaseState movingState;
+	public String thoughts;
+	
+	public void updateState(){
+		initializeState();
+		movingState =  movingState.getUpdatedState(this);
+		movingState.performAction(this);
 	}
 
-	@Override
-	void moveUp() {
-		// TODO Auto-generated method stub
-		
+	public void moveToPlayer(){
+		thoughts = "Moving To Player";
 	}
-
-	@Override
-	void moveLeft() {
-		// TODO Auto-generated method stub
-		
+	
+	public void attack(){
+		thoughts = "Attacking";
 	}
-
-	@Override
-	void moveRight() {
-		// TODO Auto-generated method stub
-		
+	
+	private void initializeState() {
+		if(movingState == null){
+			movingState = new IdleState();
+		}
 	}
+	
 
 }

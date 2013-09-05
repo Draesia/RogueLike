@@ -1,5 +1,7 @@
 package game;
 
+import game.Entities.Player;
+
 import javax.swing.JFrame;
 
 public class Frame {
