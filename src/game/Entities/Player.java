@@ -9,7 +9,8 @@ import java.awt.Image;
 
 public class Player extends Entity {
 
-	public int dir = 0;
+	public int check = 0;
+	
 	public Player(int x, int y)
 	{
 		this.x = x;
@@ -40,7 +41,12 @@ public class Player extends Entity {
 		x++;
 	}
 	public boolean willCollide(int dir)
-	{
+	{ 
+		if(check > 50) {
+			img++;
+			check = 0;
+		}
+		check++;
 		boolean collide = false;
 		Tile[][] tl = Level.tileList;
 		Tile t = null;
@@ -54,7 +60,7 @@ public class Player extends Entity {
 		}
 		if(dir == 1)
 		{
-			if(x+80 >= Frame.maxX()) return true;
+			if(x+65 >= Frame.maxX) return true;
 			
 			t = tl[(x+65)/64][(y+1)/64];
 			if(t.isCollidable()) collide = true;
@@ -64,7 +70,7 @@ public class Player extends Entity {
 		}
 		if(dir == 2)
 		{
-			if(y+92 >= Frame.maxY()) return true;
+			if(y+65 >= Frame.maxY) return true;
 			t = tl[(x+1)/64][(y+65)/64];
 			if(t.isCollidable()) collide = true;
 			t = tl[(x-1)/64+1][(y+65)/64];
@@ -80,9 +86,5 @@ public class Player extends Entity {
 		}	
 		return collide;
 	}
-	public Image getImage() {
-		return Game.images[1];
-	}
-
 
 }

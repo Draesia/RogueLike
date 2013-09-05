@@ -9,8 +9,8 @@ import java.util.List;
 public class Level {
 
 
-	public static int sizeX = 32;
-	public static int sizeY = 32;
+	public static int sizeX = 22;
+	public static int sizeY = 12;
 	public static String s;
 	public static int counter = 0;
 	public static Tile[][] tileList = new Tile[sizeX][sizeY];
@@ -29,7 +29,8 @@ public class Level {
 				}
 				if(y == 5 || y == 7) { tileList[x][y].setCollide(true); tileList[x][y].id = 3;}
 				if(y == 6) { tileList[x][y].setCollide(false); tileList[x][y].id = 0;}
-				if(x == 7) {tileList[x][y].setCollide(false); tileList[x][y].id = 0;}
+				if(x == 7) {tileList[x][y].setCollide(false); tileList[x][y].id = 0; if(y == 0) tileList[x][y].id=5;} 
+				
 			}
 		}
 		
