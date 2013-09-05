@@ -31,4 +31,8 @@ public abstract class Entity {
 	{
 		
 	}
+	
+	public void takeDamage(){
+		
+	}
 }
