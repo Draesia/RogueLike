@@ -13,6 +13,10 @@ import javax.swing.JPanel;
 
 public class Game extends JPanel implements ActionListener{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static boolean[] mouseDown = new boolean[4];
 	public static Image[] images = new Image[30];
 	public static int cx, cy, sx, sy;
