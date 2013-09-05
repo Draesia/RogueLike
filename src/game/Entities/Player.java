@@ -14,6 +14,8 @@ public class Player extends Entity {
 		// TODO Auto-generated method stub
 		
 	}
+	// hello ryan did you get this?
+	
 
 	@Override
 	void moveUp() {
