@@ -1,26 +1,22 @@
 package game;
 
+import game.Entities.Player;
+
 import java.util.List;
 
 
 public class Level {
 
 
-	public static int sizeX = 100;
-	public static int sizeY = 100;
+	public static int sizeX = 32;
+	public static int sizeY = 32;
 	public static String s;
 	public static int counter = 0;
 	public static Tile[][] tileList = new Tile[sizeX][sizeY];
 
-	public Level(int[][][] map)
+	public Level(int level)
 	{
-		for(int x = 0; x < sizeX; x++)
-		{
-			for(int y = 0; y < sizeY; y++)
-			{
-				tileList[x][y] = new Tile();
-			}
-		}
+
 	}
 
 	public Tile[][] getTilesArray() {
@@ -29,6 +25,10 @@ public class Level {
 
 	public List<Tile> getTiles() {
 		return null;
+	}
+
+	public Player getPlayer() {
+		return new Player(Frame.maxX/2, Frame.maxY/2);
 	}
 
 }

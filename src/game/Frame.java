@@ -12,7 +12,9 @@ public class Frame {
 	{
 		sframe = new JFrame("RogueLike");
 		sframe.setSize(maxX, maxY);
-		sframe.add(new Game());
+		Game g = new Game();
+		g.setFocusable(true);
+		sframe.add(g);
 		sframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		sframe.setVisible(true);
 		sframe.setResizable(true);
