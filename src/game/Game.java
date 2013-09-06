@@ -24,26 +24,25 @@ public class Game extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	public static boolean[] mouseDown = new boolean[4];
 	public static Image[] images = new Image[30];
-	public static int cx, cy, sx, sy;
+	public static int cx, cy, sx, sy, d;
 	public static Level l;
 	public static Player p;
 	public int update = 1;
 	public static ArrayList<Entity> entities = new ArrayList<Entity>();
 	private static boolean[] controls = new boolean[5];
-	
+
 	public Game()
 	{
 		for(int x = 0; x < 30; x++)
 		{
 			if(getClass().getResource("/images/tiles/"+x+".png") != null) {
 				images[x] = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/tiles/"+x+".png"));
-				System.out.println("Trying to get image: /images/tiles/"+x+".png "+cy+" "+cx);
 			}
 		}
 		setFocusable(true);
 		l = new Level(0);
 		p = l.getPlayer();
-		
+
 		addKeyListener(new KeyAdapter()
 		{
 			@Override
@@ -53,7 +52,8 @@ public class Game extends JPanel implements ActionListener{
 				if(id == Settings.W) 	 controls[1] = true;
 				if(id == Settings.S) 	 controls[2] = true;
 				if(id == Settings.D) 	 controls[3] = true;
-				if(id == Settings.space) 	 controls[3] = true;
+				if(id == Settings.space) 	 controls[4] = true;
+				if(id == 69) nextLevel();
 			}
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -62,7 +62,7 @@ public class Game extends JPanel implements ActionListener{
 				if(id == Settings.W) 	 controls[1] = false;
 				if(id == Settings.S) 	 controls[2] = false;
 				if(id == Settings.D) 	 controls[3] = false;
-				if(id == Settings.space) 	 controls[3] = true;
+				if(id == Settings.space) 	 controls[4] = true;
 			}
 		});
 
@@ -72,26 +72,29 @@ public class Game extends JPanel implements ActionListener{
 			public void mousePressed(MouseEvent mEvt) {
 				sx = mEvt.getX();
 				sy = mEvt.getY();
-				Zombie z = new Zombie();
-				z.x = sx;
-				z.y = sy;
+				//Zombie z = new Zombie();
+				//z.x = sx;
+				//z.y = sy;
 			}
 
 		});
 	}
-	
+
 	public void update()
 	{
-		if(controls[0]) p.moveLeft();
-		if(controls[1]) p.moveUp();
+		
 		if(controls[2]) p.moveDown();
+		if(controls[1]) p.moveUp();
+		if(controls[0]) p.moveLeft();
 		if(controls[3]) p.moveRight();
+		
+		
 		for(Entity e : entities)
 		{
 			//e.update();
 		}
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		repaint();
@@ -102,26 +105,38 @@ public class Game extends JPanel implements ActionListener{
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.BLACK);
 		g2d.fillRect(0, 0, Frame.maxX, Frame.maxY);
-		for(int x = 0; x < l.sizeX; x++)
-		{
-			for(int y = 0; y < l.sizeY; y++)
+//				for(int x = 0; x < l.sizeX; x++)
+//				{
+//					for(int y = 0; y < l.sizeY; y++)
+//					{
+//						Tile t = l.getTilesArray()[x][y];
+//						if(t == null) continue;
+//						g2d.drawImage(images[t.id], x*Tile.SIZE+d, y*Tile.SIZE+d, null);
+//					}
+//				}
+		if(Level.showtileList.size() > 0) {
+			for(Tile t : l.showtileList)
 			{
-				Tile t = l.getTilesArray()[x][y];
 				if(t == null) continue;
-				g2d.drawImage(images[t.id], x*Tile.SIZE, y*Tile.SIZE, null);
+				g2d.drawImage(images[t.id], t.x*Tile.SIZE+d, t.y*Tile.SIZE+d, null);
 			}
 		}
 		for(Entity e : entities)
 		{
-			g2d.drawImage(images[2], e.x, e.y, null);
+			g2d.drawImage(images[2], e.x+d, e.y+d, null);
 		}
-		g2d.drawImage(p.getImage(), p.x, p.y, null);
+		g2d.drawImage(p.getImage(), p.x+d, p.y+d, null);
 		if(update > 6) {
 			update();
 			update = 0;
 		} 
 		update++;
-					
+
 		repaint();
+	}
+
+	public static void nextLevel() {
+		l.recreate();
+		p = l.getPlayer();
 	}
 }

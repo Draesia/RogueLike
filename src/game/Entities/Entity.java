@@ -4,7 +4,9 @@ import java.awt.Image;
 import java.awt.Toolkit;
 
 import AI.movingFMS.MovingBaseState;
+import game.Game;
 import game.Level;
+import game.Tile;
 
 public abstract class Entity {
 	public int maxHealth;
@@ -55,7 +57,10 @@ public abstract class Entity {
 	public void update(){
 		
 	}
-	
+	public Tile getTile()
+	{
+		return Game.l.getTilesArray()[(x+32)/64][(y+32)/64];
+	}
 	public void seeIfDead(){
 		if(health <= 0){
 			isDead = true;
@@ -65,7 +70,6 @@ public abstract class Entity {
 	{
 		for(int x = 0; x < 12; x++)
 		{
-			System.out.println("Trying to get image: "+imagePath+x+".png");
 			if(getClass().getResource(imagePath+x+".png") != null) {
 				
 				images[x] = Toolkit.getDefaultToolkit().getImage(getClass().getResource(imagePath+x+".png"));

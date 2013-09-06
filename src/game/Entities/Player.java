@@ -10,11 +10,13 @@ import java.awt.Image;
 public class Player extends Entity {
 
 	public int check = 0;
+	public Tile t;
 	
 	public Player(int x, int y)
 	{
 		this.x = x;
 		this.y = y;
+		Game.l.showtileList = getTile().getRoom();
 	}
 
 
@@ -42,8 +44,14 @@ public class Player extends Entity {
 	}
 	public boolean willCollide(int dir)
 	{ 
+		
 		if(check > 50) {
 			img++;
+			if(t != null && t.id != this.getTile().id)
+			{
+				t = this.getTile();
+				Game.l.showtileList = t.getRoom();
+			} else { t = this.getTile(); }
 			check = 0;
 		}
 		check++;
@@ -60,7 +68,7 @@ public class Player extends Entity {
 		}
 		if(dir == 1)
 		{
-			if(x+65 >= Frame.maxX) return true;
+			if(x+65 >= Frame.maxX) { Game.nextLevel(); return true; } 
 			
 			t = tl[(x+65)/64][(y+1)/64];
 			if(t.isCollidable()) collide = true;

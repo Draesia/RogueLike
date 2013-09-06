@@ -24,8 +24,8 @@ public class Frame {
 
 
 	public static JFrame sframe;
-	public static int maxX = 1408;
-	public static int maxY = 768;
+	public static int maxX = Level.sizeX*64;
+	public static int maxY = Level.sizeY*64;
 
 	public static void main(String[] args)
 	{
