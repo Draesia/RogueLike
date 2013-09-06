@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-public class Game extends JPanel implements ActionListener{
+public class Game extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	public static boolean[] mouseDown = new boolean[4];
@@ -27,6 +27,7 @@ public class Game extends JPanel implements ActionListener{
 	public static int cx, cy, sx, sy, d;
 	public static Level l;
 	public static Player p;
+	public static boolean gameRunning = true;
 	public int update = 1;
 	public static ArrayList<Entity> entities = new ArrayList<Entity>();
 	private static boolean[] controls = new boolean[5];
@@ -78,42 +79,74 @@ public class Game extends JPanel implements ActionListener{
 			}
 
 		});
+
+		runGameLoop();
 	}
 
-	public void update()
+	public void runGameLoop()
 	{
-		
+		Thread loop = new Thread()
+		{
+			public void run()
+			{
+				gameLoop();
+			}
+		};
+		loop.start();
+	}
+	
+	public void gameLoop()
+	{
+		long lastLoopTime = System.nanoTime();
+		long lastFpsTime = 0;
+		int fps = 0;
+		final int TARGET_FPS = 60;
+		final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;   
+		while (gameRunning)
+		{
+			long now = System.nanoTime();
+			long updateLength = now - lastLoopTime;
+			lastLoopTime = now;
+			double delta = updateLength / ((double)OPTIMAL_TIME);
+
+			lastFpsTime += updateLength;
+			fps++;
+			
+			if (lastFpsTime >= 1000000000)
+			{
+				lastFpsTime = 0;
+				fps = 0;
+			}
+
+			update(delta);
+			repaint();
+			
+			try {
+				Thread.sleep( (lastLoopTime-System.nanoTime() + OPTIMAL_TIME)/4000000 );
+			} catch (Exception e) {}
+		}
+	}
+	public void update(double delta)
+	{
+
 		if(controls[2]) p.moveDown();
 		if(controls[1]) p.moveUp();
 		if(controls[0]) p.moveLeft();
 		if(controls[3]) p.moveRight();
-		
-		
+
+
 		for(Entity e : entities)
 		{
 			//e.update();
 		}
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		repaint();
-	}
 	public void paint(Graphics g)
 	{
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.BLACK);
 		g2d.fillRect(0, 0, Frame.maxX, Frame.maxY);
-//				for(int x = 0; x < l.sizeX; x++)
-//				{
-//					for(int y = 0; y < l.sizeY; y++)
-//					{
-//						Tile t = l.getTilesArray()[x][y];
-//						if(t == null) continue;
-//						g2d.drawImage(images[t.id], x*Tile.SIZE+d, y*Tile.SIZE+d, null);
-//					}
-//				}
 		if(Level.showtileList.size() > 0) {
 			for(Tile t : l.showtileList)
 			{
@@ -123,16 +156,10 @@ public class Game extends JPanel implements ActionListener{
 		}
 		for(Entity e : entities)
 		{
-			g2d.drawImage(images[2], e.x+d, e.y+d, null);
+			g2d.drawImage(e.getImage(), e.x+d, e.y+d, null);
 		}
 		g2d.drawImage(p.getImage(), p.x+d, p.y+d, null);
-		if(update > 6) {
-			update();
-			update = 0;
-		} 
-		update++;
-
-		repaint();
+		//repaint();
 	}
 
 	public static void nextLevel() {
