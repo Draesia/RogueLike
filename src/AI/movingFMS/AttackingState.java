@@ -6,7 +6,7 @@ import game.Entities.NPC;
 public class AttackingState implements MovingBaseState{
 
 	public MovingBaseState getUpdatedState(NPC e){
-		if(e.canSeePlayer)	return this;
+		if(false)	return this;
 		return new IdleState();
 	}
 	

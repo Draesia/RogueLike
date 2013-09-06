@@ -6,7 +6,7 @@ public class IdleState implements MovingBaseState{
 
 
 	public MovingBaseState getUpdatedState(NPC e) {
-		if(e.canSeePlayer){
+		if(false){
 			return new AttackingState();
 		}
 		return this;

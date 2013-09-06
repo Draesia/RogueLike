@@ -42,6 +42,10 @@ public class Game extends JPanel implements ActionListener{
 		setFocusable(true);
 		l = new Level(0);
 		p = l.getPlayer();
+		Zombie zom = new Zombie();
+		zom.x =Frame.maxX/2 + 100;
+		zom.y = Frame.maxY/2 - 100 ;
+		entities.add(zom);
 
 		addKeyListener(new KeyAdapter()
 		{
@@ -91,7 +95,7 @@ public class Game extends JPanel implements ActionListener{
 		
 		for(Entity e : entities)
 		{
-			//e.update();
+			e.update();
 		}
 	}
 
@@ -123,7 +127,7 @@ public class Game extends JPanel implements ActionListener{
 		}
 		for(Entity e : entities)
 		{
-			g2d.drawImage(images[2], e.x+d, e.y+d, null);
+			g2d.drawImage(e.getImage(), e.x+d, e.y+d, null);
 		}
 		g2d.drawImage(p.getImage(), p.x+d, p.y+d, null);
 		if(update > 6) {

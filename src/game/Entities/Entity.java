@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 
 import AI.movingFMS.MovingBaseState;
+import game.Frame;
 import game.Game;
 import game.Level;
 import game.Tile;
@@ -18,7 +19,6 @@ public abstract class Entity {
 	public Level level;
 	public boolean isDead = false;;
 	public boolean WillAttack;
-	public boolean canSeePlayer =false;
 	public int img = 0;
 	public String imagePath = "/images/entities/player/";
 	private Image[] images = new Image[12];
@@ -88,5 +88,49 @@ public abstract class Entity {
 		}
 		return images[img];
 		
+	}
+	
+	public boolean willCollide(int dir)
+	{ 
+		
+
+		boolean collide = false;
+		Tile[][] tl = Level.tileList;
+		Tile t = null;
+		if(dir == 0)
+		{
+			if(y-1 <= 0) return true;
+			t = tl[(x+1)/64][(y-1)/64];
+			if(t.isCollidable()) collide = true;
+			t = tl[(x-1)/64+1][(y-1)/64];
+			if(t.isCollidable()) collide = true;
+		}
+		if(dir == 1)
+		{
+			if(x+65 >= Frame.maxX) { Game.nextLevel(); return true; } 
+			
+			t = tl[(x+65)/64][(y+1)/64];
+			if(t.isCollidable()) collide = true;
+			t = tl[(x+65)/64][(y-1)/64+1];
+			if(t.isCollidable()) collide = true;
+			
+		}
+		if(dir == 2)
+		{
+			if(y+65 >= Frame.maxY) return true;
+			t = tl[(x+1)/64][(y+65)/64];
+			if(t.isCollidable()) collide = true;
+			t = tl[(x-1)/64+1][(y+65)/64];
+			if(t.isCollidable()) collide = true;
+		}
+		if(dir == 3)
+		{
+			if(x-1 <= 0) return true;
+			t = tl[(x-1)/64][(y+1)/64];
+			if(t.isCollidable()) collide = true;
+			t = tl[(x-1)/64][(y-1)/64+1];
+			if(t.isCollidable()) collide = true;
+		}	
+		return collide;
 	}
 }

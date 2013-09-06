@@ -9,9 +9,9 @@ import java.awt.Image;
 
 public class Player extends Entity {
 
-	public int check = 0;
-	public Tile t;
 	
+	public Tile t;
+	public int check = 0;
 	public Player(int x, int y)
 	{
 		this.x = x;
@@ -42,9 +42,8 @@ public class Player extends Entity {
 		if(willCollide(dir)) return;
 		x++;
 	}
-	public boolean willCollide(int dir)
-	{ 
-		
+	
+	public boolean willCollide(int dir){
 		if(check > 50) {
 			img++;
 			if(t != null && t.id != this.getTile().id)
@@ -55,44 +54,8 @@ public class Player extends Entity {
 			check = 0;
 		}
 		check++;
-		boolean collide = false;
-		Tile[][] tl = Level.tileList;
-		Tile t = null;
-		if(dir == 0)
-		{
-			if(y-1 <= 0) return true;
-			t = tl[(x+1)/64][(y-1)/64];
-			if(t.isCollidable()) collide = true;
-			t = tl[(x-1)/64+1][(y-1)/64];
-			if(t.isCollidable()) collide = true;
-		}
-		if(dir == 1)
-		{
-			if(x+65 >= Frame.maxX) { Game.nextLevel(); return true; } 
-			
-			t = tl[(x+65)/64][(y+1)/64];
-			if(t.isCollidable()) collide = true;
-			t = tl[(x+65)/64][(y-1)/64+1];
-			if(t.isCollidable()) collide = true;
-			
-		}
-		if(dir == 2)
-		{
-			if(y+65 >= Frame.maxY) return true;
-			t = tl[(x+1)/64][(y+65)/64];
-			if(t.isCollidable()) collide = true;
-			t = tl[(x-1)/64+1][(y+65)/64];
-			if(t.isCollidable()) collide = true;
-		}
-		if(dir == 3)
-		{
-			if(x-1 <= 0) return true;
-			t = tl[(x-1)/64][(y+1)/64];
-			if(t.isCollidable()) collide = true;
-			t = tl[(x-1)/64][(y-1)/64+1];
-			if(t.isCollidable()) collide = true;
-		}	
-		return collide;
+		
+		return super.willCollide(dir);
 	}
 
 }
