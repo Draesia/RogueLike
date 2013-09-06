@@ -1,6 +1,9 @@
 package game.Entities;
 
+import game.Frame;
 import game.Game;
+import game.Level;
+import game.Tile;
 import AI.movingFMS.IdleState;
 import AI.movingFMS.MovingBaseState;
 
@@ -40,23 +43,22 @@ public class NPC extends Entity {
 		double hyp = Math.sqrt(diffX*diffX + diffY*diffY);
 		diffX /= hyp;
 		diffY /= hyp;
-		
 		int dir=0;
 		
 		if(diffX > 0) dir = 1;
 		else dir = 3;		
 		
-		if(!willCollide(dir))this.x += diffX*speed;
-		
+		if(!willCollide(dir)){this.x += diffX*speed;}else{
+			this.y += (Game.p.y - this.y) / Math.abs((Game.p.y - this.y));
+		}
 	
-		
-		
 		if(diffY > 0) dir = 2;
 		else dir = 0;
 		if(!willCollide(dir)){
 			this.y += diffY*speed;
+		}else{
+			this.x += (Game.p.x - this.x) / Math.abs((Game.p.x - this.x));
 		}
-		
 	}
 	
 	public void attack(){
@@ -68,6 +70,5 @@ public class NPC extends Entity {
 			movingState = new IdleState();
 		}
 	}
-	
 
 }

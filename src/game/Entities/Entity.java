@@ -92,8 +92,6 @@ public abstract class Entity {
 	
 	public boolean willCollide(int dir)
 	{ 
-		
-
 		boolean collide = false;
 		Tile[][] tl = Level.tileList;
 		Tile t = null;
@@ -113,7 +111,6 @@ public abstract class Entity {
 			if(t.isCollidable()) collide = true;
 			t = tl[(x+65)/64][(y-1)/64+1];
 			if(t.isCollidable()) collide = true;
-			
 		}
 		if(dir == 2)
 		{
