@@ -5,11 +5,13 @@ import java.util.List;
 
 public class Tile {
 	public static final int SIZE = 64;
+	
 	public int id = 0;
 	private boolean collide;
 	private boolean visible;
 	public int x;
 	public int y;
+	public Item item;
 
 	public Tile(int x, int y, int id)
 	{
@@ -43,11 +45,21 @@ public class Tile {
 	{
 		return (i!=0 && i!=2);
 	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
 	public List<Tile> getRoom()
 	{
 		List<Tile> room = new ArrayList<Tile>();
 		List<Tile> toCheck = new ArrayList<Tile>();
 		toCheck.add(this);
+		
 		while(toCheck.size() > 0)
 		{
 			Tile t = toCheck.get(0);
@@ -73,6 +85,7 @@ public class Tile {
 			room.add(t);
 			toCheck.remove(t);
 		}
+		// Amount of doors = the amount of tiles with 
 		return room;
 	}
 }

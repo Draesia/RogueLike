@@ -24,20 +24,33 @@ public class Level {
 	public static List<Tile> showtileList = new ArrayList<Tile>();
 	public Level(int level)
 	{
-		Dungeon d = new Dungeon();
-		tileList = d.getTileMap();
+		create();
 	}
-	public void recreate()
+	public void create()
 	{
 		Dungeon d = new Dungeon();
+		Random r = new Random();
+		int LootChancePerFloor = 20;
 		tileList = d.getTileMap();
+		for(int x = 0; x < sizeX; x++)
+		{
+			for(int y = 0; y < sizeY; y++)
+			{
+				if(tileList[x][y].id == 0 && r.nextInt(100) < LootChancePerFloor) 
+				{
+					tileList[x][y].setItem(new Item(Item.Type.LOOT));
+				}
+			}
+		}
 	}
 	public Tile[][] getTilesArray() {
 		return tileList;
 	}
 	public Tile getTileAt(int x, int y)
-	{
-		return tileList[x][y];
+	{		
+		if(x < Level.sizeX && y < Level.sizeY && x > -1  && y > -1)
+			return tileList[x][y];
+		return null;
 	}
 	public List<Tile> getTiles() {
 		return null;

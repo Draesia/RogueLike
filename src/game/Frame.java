@@ -1,24 +1,16 @@
 package game;
 
-import game.Entities.Player;
-
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JButton;
-import javax.swing.JLabel;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Panel;
 import java.awt.Toolkit;
 import javax.swing.SwingConstants;
-import java.awt.FlowLayout;
 
 public class Frame {
 
@@ -42,11 +34,12 @@ public class Frame {
 		sframe.getContentPane().add(btnStart, BorderLayout.SOUTH);
 		sframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		sframe.setVisible(true);
+		sframe.setResizable(false);
 	}
 	public static void start()
 	{
 		sframe = new JFrame("RogueLike");
-		sframe.setSize(maxX+16, maxY+32);
+		sframe.setSize(maxX+6, maxY+28);
 		Game g = new Game();
 		sframe.getContentPane().add(g);
 		sframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

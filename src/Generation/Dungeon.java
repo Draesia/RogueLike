@@ -1,12 +1,15 @@
 package Generation;
 
+import game.Game;
 import game.Level;
 import game.Tile;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
-public class Dungeon {
+public class Dungeon extends Generation {
 	// max size of the map
 	private int xmax = Level.sizeX; // 80 columns
 	private int ymax = Level.sizeY; // 25 rows
@@ -40,7 +43,7 @@ public class Dungeon {
 	final private int tileDownStairs = 7;
 	final private int tileChest = 8;
 
-	public Tile[][] tileMap = new Tile[xmax][ymax];
+	
 
 	// setting a tile's type
 	private void setCell(int x, int y, int celltype) {
@@ -57,8 +60,7 @@ public class Dungeon {
 			case tileUnused:
 			case tileFloor:
 			case tileCorridor:
-			case tileChest: 
-				i = 0;
+				i=0;
 			break;
 			case tileDoor: i = 2; break;
 			case tileStoneWall: break;
@@ -80,7 +82,36 @@ public class Dungeon {
 			i = -i;
 		return min + i;
 	}
+	public static int getDoors(Tile tile)
+	{
+		List<Tile> toCheck = new ArrayList<Tile>();
+		List<Tile> room = new ArrayList<Tile>();
+		toCheck.add(tile);
+		int doors = 0;
+		while(toCheck.size() > 0)
+		{
+			Tile t = toCheck.get(0);
 
+			Tile t1 = Game.l.getTileAt(t.x+1, t.y);
+			if(!room.contains(t1) && !toCheck.contains(t1)) if (t1.id == t.id || t1.id == 0) toCheck.add(t1); else room.add(t1);
+			if(t1.id == 2) doors++;
+			t1 = Game.l.getTileAt(t.x-1, t.y);
+			if(!room.contains(t1) && !toCheck.contains(t1)) if (t1.id == t.id || t1.id == 0) toCheck.add(t1); else room.add(t1);
+			if(t1.id == 2) doors++;
+			t1 = Game.l.getTileAt(t.x, t.y+1);
+			if(!room.contains(t1) && !toCheck.contains(t1)) if (t1.id == t.id || t1.id == 0) toCheck.add(t1); else room.add(t1);
+			if(t1.id == 2) doors++;
+			t1 = Game.l.getTileAt(t.x, t.y-1);
+			if(!room.contains(t1) && !toCheck.contains(t1)) if (t1.id == t.id || t1.id == 0) toCheck.add(t1); else room.add(t1);
+			if(t1.id == 2) doors++;
+			
+			room.add(t);
+			toCheck.remove(t);
+		}
+		// Amount of doors = the amount of tiles with 
+		System.out.println("Doors ="+doors);
+		return doors;
+	}
 	private boolean makeCorridor(int x, int y, int lenght, int direction) {
 		// define the dimensions of the corridor (er.. only the width and
 		// height..)
@@ -313,7 +344,8 @@ public class Dungeon {
 				}
 				break;
 		}
-
+		System.out.println("Y:"+y+" X:"+x+" YLength:"+ylen+" XLength:"+xlen);
+		setCell(x,y, tileStoneWall);
 		// yay, all done
 		return true;
 	}
@@ -322,7 +354,6 @@ public class Dungeon {
 	public void showDungeon() {
 		for (int y = 0; y < ysize; y++) {
 			for (int x = 0; x < xsize; x++) {
-				// System.out.print(getCell(x, y));
 				tileMap [x][y] = getTile(x, y);
 				switch (getCell(x, y)) {
 					case tileUnused:
@@ -335,7 +366,7 @@ public class Dungeon {
 						System.out.print("F");
 						break;
 					case tileStoneWall:
-						System.out.print("#");
+						System.out.print("O");
 						break;
 					case tileCorridor:
 						System.out.print("C");
@@ -344,7 +375,7 @@ public class Dungeon {
 						System.out.print("D");
 						break;
 					case tileChest:
-						System.out.print("C");
+						System.out.print("@");
 						break;
 				};
 			}
@@ -354,10 +385,7 @@ public class Dungeon {
 	}
 	
 
-	public Tile[][] getTileMap()
-	{
-		return tileMap;
-	}
+
 	
 
 	
@@ -510,14 +538,14 @@ public class Dungeon {
 				if (state == 0) {
 					if (ways == 0) {
 
-						setCell(newx, newy, tileUpStairs);
+						setCell(newx, newy, tileChest);
 						state = 1;
 						break;
 					}
 				} else if (state == 1) {
 					if (ways == 0) {
 		
-						setCell(newx, newy, tileDownStairs);
+						setCell(newx, newy, tileChest);
 						state = 10;
 						break;
 					}
@@ -528,6 +556,7 @@ public class Dungeon {
 		
 		return true;
 	}
+	
 
 	public Dungeon() {
 		if (createDungeon()) {
