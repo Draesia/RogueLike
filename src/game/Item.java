@@ -26,7 +26,7 @@ public class Item {
 	
 	public void onPickup(Player pl)
 	{
-		if(type == Type.LOOT) { Game.score =+ r.nextInt(10); return;}
+		if(type == Type.LOOT) { Game.score = Game.score + r.nextInt(10); return;}
 	}
 	
 	public void doPassive(Player pl)

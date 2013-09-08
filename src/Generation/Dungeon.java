@@ -43,7 +43,7 @@ public class Dungeon extends Generation {
 	final private int tileDownStairs = 7;
 	final private int tileChest = 8;
 
-	
+
 
 	// setting a tile's type
 	private void setCell(int x, int y, int celltype) {
@@ -61,7 +61,7 @@ public class Dungeon extends Generation {
 			case tileFloor:
 			case tileCorridor:
 				i=0;
-			break;
+				break;
 			case tileDoor: i = 2; break;
 			case tileStoneWall: break;
 			case tileWall: break;
@@ -104,7 +104,7 @@ public class Dungeon extends Generation {
 			t1 = Game.l.getTileAt(t.x, t.y-1);
 			if(!room.contains(t1) && !toCheck.contains(t1)) if (t1.id == t.id || t1.id == 0) toCheck.add(t1); else room.add(t1);
 			if(t1.id == 2) doors++;
-			
+
 			room.add(t);
 			toCheck.remove(t);
 		}
@@ -383,12 +383,12 @@ public class Dungeon extends Generation {
 				System.out.println();
 		}
 	}
-	
 
 
-	
 
-	
+
+
+
 	// and here's the one generating the whole map
 	public boolean createDungeon() {
 
@@ -426,13 +426,13 @@ public class Dungeon extends Generation {
 			}
 
 			// start with a random wall
-			
+
 			int newx = 0;
 			int xmod = 0;
 			int newy = 0;
 			int ymod = 0;
 			int validTile = -1;
-			
+
 			for (int testing = 0; testing < 1000; testing++) {
 				newx = getRand(1, xsize - 1);
 				newy = getRand(1, ysize - 1);
@@ -544,7 +544,7 @@ public class Dungeon extends Generation {
 					}
 				} else if (state == 1) {
 					if (ways == 0) {
-		
+
 						setCell(newx, newy, tileChest);
 						state = 10;
 						break;
@@ -553,14 +553,32 @@ public class Dungeon extends Generation {
 			}
 		}
 
+		for (int y = 0; y < ysize; y++) {
+			for (int x = 0; x < xsize; x++) {
+				// ie, making the borders of unwalkable walls
+				if (getCell(x, y) == tileDoor)
+				{
+					int i = 0;
+					if(getCell(x, y-1) == tileWall) i++;
+					if(getCell(x, y+1) == tileWall) i++;
+					if(getCell(x-1, y) == tileWall) i++;
+					if(getCell(x+1, y) == tileWall) i++;
+					if(i != 2) setCell(x, y, tileFloor);
+				}
+			}
+		}
 		
 		return true;
 	}
-	
+
 
 	public Dungeon() {
-		if (createDungeon()) {
-			showDungeon();
+		boolean made = false;
+		while(!made) {
+			if (createDungeon()) {
+				made = true;
+				showDungeon();
+			}
 		}
 	}
 }

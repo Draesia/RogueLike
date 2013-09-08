@@ -9,13 +9,12 @@ import game.Game;
 import game.Level;
 import game.Tile;
 
-public abstract class Entity {
-	
+public class Entity {
+
 	public int maxHealth;
 	public int health = 10;
-	public int speed;
 	public int attackSpeed;
-	public int bulletSpeed = 3;
+	public int bulletSpeed = 1;
 	public int cooldown = 0;
 	public int damage = 3;
 	public Tile t;
@@ -30,7 +29,11 @@ public abstract class Entity {
 	private Image[] images = new Image[12];
 	public int dir = 0;
 	public Rectangle rectangle;
-	
+
+	public Entity()
+	{
+		isDead = false;
+	}
 	public void moveDown(){
 		dir = 2;
 		if(willCollide(dir)) return;
@@ -53,19 +56,29 @@ public abstract class Entity {
 		if(willCollide(dir)) return;
 		x++;
 	}
-
+	public void kill()
+	{
+		Game.entities.remove(this);
+		isDead = true;
+	}
 	public boolean willCollide(int dir)
 	{ 
-		if(check > 50) {
+		if(check > 30) {
 			img++;
-			if(t != null && t.id != this.getTile().id)
-			{
-				t = this.getTile();
-				Game.l.showtileList = t.getRoom();
-			} else { t = this.getTile(); }
+			if(this instanceof Player) {
+				if(t != null && t.id != this.getTile().id)
+				{
+					t = this.getTile();
+					Game.l.showtileList = t.getRoom();
+				} else { t = this.getTile(); }
+			}
 			check = 0;
 		}
 		check++;
+		if(!(this instanceof Player))
+		{
+
+		}
 		boolean collide = false;
 		Tile[][] tl = Level.tileList;
 		Tile t = null;
@@ -80,12 +93,12 @@ public abstract class Entity {
 		if(dir == 1)
 		{
 			if(x+65 >= Frame.maxX) { Game.nextLevel(); return true; } 
-			
+
 			t = tl[(x+65)/64][(y+1)/64];
 			if(t.isCollidable()) collide = true;
 			t = tl[(x+65)/64][(y-1)/64+1];
 			if(t.isCollidable()) collide = true;
-			
+
 		}
 		if(dir == 2)
 		{
@@ -114,7 +127,7 @@ public abstract class Entity {
 		dir = 0;
 		shoot();
 	}
-	
+
 	public void shootLeft(){
 		dir = 3;
 		shoot();
@@ -123,40 +136,43 @@ public abstract class Entity {
 		dir = 1;
 		shoot();
 	}	
-	
+
 	public void shoot(){
-		System.out.println("Shooting");
 		if(cooldown == 0)
 		{
-			System.out.println("Shot");
 			Game.entities.add(new Bullet(dir, x+24, y+24, this));
 			cooldown = 100;
 		}
 	}
 
-	public void  Initialize(){
-		health = maxHealth;
-	}
-
 	public void attack()
 	{
-		
+
 	}
-	
+
 	public void takeDamage(int damage){
-		health -= damage;
-		seeIfDead();
+		this.health = this.health - damage;
+		System.out.println("HP: "+this.health+" Damage:"+damage);
+		if(this.health <= 0) {
+			kill();
+			System.out.println("Dead");
+		}
 	}
-	
+
 	public void update()
 	{
+
 	}
+
 	public Rectangle getRectangle()
 	{
 		if(rectangle == null)
 		{
-			rectangle = new Rectangle(x, y, getImage().getHeight(null), getImage().getWidth(null));
+			Image i = getImage();
+			if(i != null)
+				rectangle = new Rectangle(x, y, getImage().getHeight(null), getImage().getWidth(null));
 		}
+		if(rectangle == null) return null;
 		rectangle.setLocation(x, y);
 		return rectangle;
 	}
@@ -165,20 +181,22 @@ public abstract class Entity {
 		int cx = (x+32)/64;
 		int cy = (y+32)/64;
 		if(cx < Level.sizeX && cy < Level.sizeY && cx > 0 && cy > 0)
-			return Game.l.getTilesArray()[cx][cy];
+			return Game.l.getTileAt(cx, cy);
 		return null;
 	}
+	public Tile getTile(int x, int y)
+	{
+		return Game.l.getTileAt(x, y);
+	}
 	public void seeIfDead(){
-		if(health <= 0){
-			isDead = true;
-		}
+
 	}
 	public void loadImages()
 	{
 		for(int x = 0; x < 12; x++)
 		{
 			if(getClass().getResource(imagePath+x+".png") != null) {
-				
+
 				images[x] = Toolkit.getDefaultToolkit().getImage(getClass().getResource(imagePath+x+".png"));
 			}
 		}
@@ -189,7 +207,8 @@ public abstract class Entity {
 	}
 	public Image getRenderImage()
 	{
-		if(Level.showtileList.contains(getTile())) return getImage();
+		if(Level.showtileList.contains(getTile())) 
+			return getImage();
 		return null;
 	}
 	public Image getImage()
@@ -203,6 +222,6 @@ public abstract class Entity {
 			case 2: if(img < 0 || img > 2) img = 0; break;
 		}
 		return images[img];
-		
+
 	}
 }
